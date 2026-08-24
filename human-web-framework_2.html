@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Human-Web: Dari Sarang Laba-laba ke Peta Prioritas Hidup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0F0C;
+    --surface:#16180F;
+    --surface2:#1D2016;
+    --thread:#8C8C7E;
+    --thread-dim:#4A4B41;
+    --text:#EDEEE6;
+    --text-dim:#B4B4A8;
+    --accent:#E8A33D;
+    --accent-dim:#5A431E;
+    --line:#2A2C21;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans',sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+  header.hero{
+    padding:100px 24px 80px;
+    border-bottom:1px solid var(--line);
+    position:relative;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:20px;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    font-size:clamp(32px,5vw,52px);
+    line-height:1.15;
+    max-width:680px;
+    margin:0 auto;
+  }
+  .hero-sub{
+    max-width:680px;
+    margin:24px auto 0;
+    color:var(--text-dim);
+    font-size:17px;
+  }
+  section{padding:64px 0;border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--thread);
+    letter-spacing:0.1em;
+    margin-bottom:12px;
+  }
+  h2{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    font-size:28px;
+    margin-bottom:20px;
+    max-width:560px;
+  }
+  p{color:var(--text-dim);font-size:16px;max-width:640px;margin-bottom:16px;}
+  p strong{color:var(--text);font-weight:500;}
+  .stat-row{
+    display:flex;
+    gap:16px;
+    margin:28px 0;
+    flex-wrap:wrap;
+  }
+  .stat{
+    flex:1;
+    min-width:140px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:18px 20px;
+  }
+  .stat-val{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:24px;
+    color:var(--accent);
+    display:block;
+  }
+  .stat-label{font-size:13px;color:var(--thread);margin-top:4px;}
+  table{width:100%;border-collapse:collapse;margin:24px 0;}
+  th,td{
+    text-align:left;
+    padding:12px 14px;
+    border-bottom:1px solid var(--line);
+    font-size:14.5px;
+    vertical-align:top;
+  }
+  th{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    font-weight:500;
+  }
+  td:first-child{color:var(--text);font-weight:500;white-space:nowrap;}
+  td{color:var(--text-dim);}
+  .callout{
+    border-left:2px solid var(--accent);
+    padding:4px 0 4px 20px;
+    margin:24px 0;
+    color:var(--text);
+    font-size:15px;
+    font-style:italic;
+  }
+  .diagram-block{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 16px 24px;
+    margin:32px 0 20px;
+  }
+  .legend{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:10px 24px;
+    margin-top:24px;
+    font-size:13.5px;
+  }
+  .legend-item{
+    display:flex;
+    gap:10px;
+    align-items:baseline;
+    color:var(--text-dim);
+  }
+  .legend-num{
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--accent);
+    font-size:13px;
+    min-width:16px;
+  }
+  .legend-ring{font-family:'IBM Plex Mono',monospace;color:var(--thread);font-size:13px;min-width:70px;}
+  .formula{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:15px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:16px 20px;
+    margin:20px 0;
+    color:var(--accent);
+    overflow-x:auto;
+  }
+  .plaque{
+    background:var(--surface2);
+    border:1px solid var(--accent-dim);
+    border-radius:14px;
+    padding:40px 32px;
+    text-align:center;
+    margin-top:8px;
+  }
+  .plaque .num{justify-content:center;text-align:center;}
+  .plaque p.lead{
+    font-family:'Fraunces',serif;
+    font-size:21px;
+    font-style:italic;
+    color:var(--text);
+    max-width:520px;
+    margin:0 auto 16px;
+    line-height:1.5;
+  }
+  .plaque p.small{font-size:13.5px;color:var(--thread);max-width:480px;margin:0 auto;}
+  footer{
+    padding:48px 24px 80px;
+    text-align:center;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--thread-dim);
+    letter-spacing:0.06em;
+  }
+  @media(max-width:600px){
+    header.hero{padding:64px 20px 56px;}
+    section{padding:48px 0;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Spider biology &rarr; PDCA &rarr; human sectors &rarr; probability</div>
+    <h1>Human-Web: dari sarang laba-laba ke peta prioritas hidup</h1>
+    <p class="hero-sub">Bagaimana arsitektur sarang laba-laba — sektor, lapisan radial, getaran, dan perbaikan lokal — bisa dipetakan jadi kerangka berpikir manusia untuk memprioritaskan hidup, dan di mana batas wajar kalkulator probabilitas (AI) berperan di dalamnya.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="num">00 &mdash; cara membaca</div>
+    <h2>Sebuah analogi lintas-domain, dibangun bertahap</h2>
+    <p>Halaman ini merunut satu alur pemikiran: dimulai dari <strong>fakta biologi</strong> tentang bagaimana laba-laba mengatur sarangnya, lalu dipetakan jadi <strong>kerangka berpikir</strong> untuk memprioritaskan hidup manusia, dan ditutup dengan batasan wajar dari <strong>kalkulator probabilitas</strong> (AI) saat dipakai membantu pengambilan keputusan.</p>
+    <p>Tiap bagian dibangun di atas bagian sebelumnya, jadi urutannya disarankan dibaca dari atas ke bawah. Istilah yang dipakai berulang: <strong>sektor</strong> (domain kehidupan), <strong>lapisan radial</strong> (skala keterlibatan sosial, dari diri sendiri hingga negara), dan <strong>hub</strong> (diri sendiri sebagai pusat pengambilan keputusan). Semua istilah ini didefinisikan ulang saat pertama muncul, jadi tidak perlu latar belakang khusus untuk mengikutinya.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="num">01 &mdash; anatomi sarang</div>
+    <h2>Sarang bukan lingkaran acak. Ia grid.</h2>
+    <p>Laba-laba orb-weaver membagi 360 derajat sarangnya jadi <strong>radii</strong> (benang jari-jari, fungsi sebagai sektor) dan <strong>spiral tangkap</strong> yang melingkar dari tepi ke pusat (fungsi sebagai lapisan radial). Keduanya membentuk grid polar untuk mendeteksi posisi mangsa secara presisi.</p>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-val">15&ndash;35</span><span class="stat-label">radii (sektor) per sarang</span></div>
+      <div class="stat"><span class="stat-val">1&ndash;5 mm</span><span class="stat-label">spasi antar putaran spiral</span></div>
+      <div class="stat"><span class="stat-val">tidak signifikan</span><span class="stat-label">pengaruh ukuran tubuh spider terhadap jumlah sektor/spiral</span></div>
+    </div>
+    <p>Yang menarik: ukuran tubuh laba-laba tidak menentukan jumlah sektor atau jumlah lapisan spiral. Yang berubah hanya luas area tangkap &mdash; dicapai dengan melebarkan jarak, bukan menambah jumlah bagian. Desain gridnya konsisten lintas ukuran.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="num">02 &mdash; getaran sebagai bahasa PDCA</div>
+    <h2>Vibrasi = koordinat masalah, hub = pusat keputusan</h2>
+    <p>Getaran yang merambat di radii memberi tahu laba-laba <strong>arah</strong> (radius mana yang paling bergetar) dan sifat sinyalnya (frekuensi membedakan mangsa, angin, atau ancaman). Ini memetakan rapi ke siklus Plan-Do-Check-Act.</p>
+    <table>
+      <tr><th>Fase</th><th>Perilaku spider</th></tr>
+      <tr><td>Plan</td><td>Arsitektur sektor &amp; spiral dibangun di muka, sebagai infrastruktur antisipatif</td></tr>
+      <tr><td>Do</td><td>Monitoring pasif berkelanjutan lewat hub, semua sektor didengar paralel</td></tr>
+      <tr><td>Check</td><td>Filtrasi sinyal by frekuensi &mdash; membedakan mangsa asli dari angin/derau</td></tr>
+      <tr><td>Act</td><td>Eksekusi tepat sasaran di koordinat sektor tertentu, bukan reaksi global</td></tr>
+    </table>
+    <div class="callout">Spider bahkan menyetel tegangan radial secara aktif untuk mengalibrasi sensitivitas deteksinya &mdash; kalibrasi sistem sensing itu sendiri jadi bagian dari siklus.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="num">03 &mdash; repair lokal</div>
+    <h2>Act menutup loop kembali ke Plan &mdash; tapi hanya sebagian</h2>
+    <p>Spider mendeteksi kerusakan lewat hilangnya tegangan, bukan lewat inspeksi visual. Responsnya konservatif: hanya benang penguat di sekitar area rusak yang diganti &mdash; radii utama dan hub tidak pernah dibongkar ulang untuk kerusakan kecil.</p>
+    <div class="callout">Kegagalan lokal itu preferensial: tidak mengorbankan integritas struktural keseluruhan, sehingga sarang tetap berfungsi meski ada kerusakan.</div>
+    <p>Dua skala loop berjalan bersamaan: perbaikan mikro per-sektor (harian, reaktif terhadap sinyal spesifik), dan rebuild total periodik (evaluasi besar, biasanya semalam sekali).</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="num">04 &mdash; human-web</div>
+    <h2>6 sektor &times; 4 lapisan radial = 24 sel kehidupan</h2>
+    <p>Diterapkan ke manusia: sektor jadi domain kehidupan, lapisan radial jadi skala keterlibatan sosial &mdash; dari diri sendiri hingga institusi negara. Setiap perpotongan adalah unit analisis dan unit tindakan sendiri.</p>
+
+    <div class="diagram-block">
+      <svg width="100%" viewBox="0 0 680 700" role="img" aria-label="Diagram polar 6 sektor dan 4 lapisan radial">
+        <circle cx="340" cy="340" r="250" fill="none" stroke="#2A2C21" stroke-width="1"/>
+        <circle cx="340" cy="340" r="187" fill="none" stroke="#2A2C21" stroke-width="1"/>
+        <circle cx="340" cy="340" r="125" fill="none" stroke="#2A2C21" stroke-width="1"/>
+        <circle cx="340" cy="340" r="62" fill="none" stroke="#5A431E" stroke-width="1"/>
+        <line x1="340" y1="340" x2="340" y2="90" stroke="#2A2C21" stroke-width="1"/>
+        <line x1="340" y1="340" x2="556.5" y2="215" stroke="#2A2C21" stroke-width="1"/>
+        <line x1="340" y1="340" x2="556.5" y2="465" stroke="#2A2C21" stroke-width="1"/>
+        <line x1="340" y1="340" x2="340" y2="590" stroke="#2A2C21" stroke-width="1"/>
+        <line x1="340" y1="340" x2="123.5" y2="465" stroke="#2A2C21" stroke-width="1"/>
+        <line x1="340" y1="340" x2="123.5" y2="215" stroke="#2A2C21" stroke-width="1"/>
+        <circle cx="340" cy="340" r="62" fill="#E8A33D" fill-opacity="0.15" stroke="#E8A33D" stroke-width="1"/>
+        <text x="340" y="340" text-anchor="middle" dominant-baseline="central" font-family="IBM Plex Mono, monospace" font-size="14" fill="#E8A33D">wo</text>
+        <text x="355" y="309" dominant-baseline="central" font-family="IBM Plex Mono, monospace" font-size="12" fill="#8C8C7E">ni</text>
+        <text x="355" y="246" dominant-baseline="central" font-family="IBM Plex Mono, monospace" font-size="12" fill="#8C8C7E">ren</text>
+        <text x="355" y="184" dominant-baseline="central" font-family="IBM Plex Mono, monospace" font-size="12" fill="#8C8C7E">state/nasion</text>
+        <text x="449" y="151" text-anchor="middle" dominant-baseline="central" font-family="IBM Plex Sans, sans-serif" font-size="15" font-weight="500" fill="#EDEEE6">1</text>
+        <text x="558" y="340" text-anchor="middle" dominant-baseline="central" font-family="IBM Plex Sans, sans-serif" font-size="15" font-weight="500" fill="#EDEEE6">2</text>
+        <text x="449" y="529" text-anchor="middle" dominant-baseline="central" font-family="IBM Plex Sans, sans-serif" font-size="15" font-weight="500" fill="#EDEEE6">3</text>
+        <text x="231" y="529" text-anchor="middle" dominant-baseline="central" font-family="IBM Plex Sans, sans-serif" font-size="15" font-weight="500" fill="#EDEEE6">4</text>
+        <text x="122" y="340" text-anchor="middle" dominant-baseline="central" font-family="IBM Plex Sans, sans-serif" font-size="15" font-weight="500" fill="#EDEEE6">5</text>
+        <text x="231" y="151" text-anchor="middle" dominant-baseline="central" font-family="IBM Plex Sans, sans-serif" font-size="15" font-weight="500" fill="#EDEEE6">6</text>
+      </svg>
+
+      <div class="legend">
+        <div class="legend-item"><span class="legend-num">1</span> Tubuh ragawi</div>
+        <div class="legend-item"><span class="legend-num">2</span> Relasional internal &amp; eksternal</div>
+        <div class="legend-item"><span class="legend-num">3</span> Ekonomi</div>
+        <div class="legend-item"><span class="legend-num">4</span> ELSA &mdash; etis, hukum, sosial</div>
+        <div class="legend-item"><span class="legend-num">5</span> Kontribusi pengetahuan</div>
+        <div class="legend-item"><span class="legend-num">6</span> Komunitas terdekat</div>
+      </div>
+      <div class="legend" style="margin-top:18px;">
+        <div class="legend-item"><span class="legend-ring">wo</span> diri sendiri, hub</div>
+        <div class="legend-item"><span class="legend-ring">ni</span> relasi dekat</div>
+        <div class="legend-item"><span class="legend-ring">ren</span> masyarakat luas</div>
+        <div class="legend-item"><span class="legend-ring">state/nasion</span> institusi makro</div>
+      </div>
+    </div>
+
+    <p>Bedanya dengan piramida Maslow: Maslow linear-hierarkis, satu sumbu, harus tuntas satu tingkat sebelum naik. Model ini polar-paralel &mdash; semua sektor dipantau bersamaan lewat hub, seperti spider memantau semua radii serentak, bukan berurutan.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="num">05 &mdash; meja biliar &amp; kalkulator AI</div>
+    <h2>6 meja, 4 sisi pantul tiap meja. AI menghitung lintasan, bukan memutuskan sodokan.</h2>
+    <p>Tiap <strong>sektor</strong> diibaratkan satu meja biliar utuh &mdash; jadi ada 6 meja, satu per domain kehidupan. Tiap meja punya <strong>4 sisi pantul</strong>, sesuai 4 lapisan radial (wo, ni, ren, state/nasion). Satu sodokan di meja ekonomi bisa memantul dari sisi wo (keputusan pribadi) ke sisi ni (keluarga), lalu ke sisi ren (reputasi sosial) &mdash; semua di meja yang sama, cuma beda sisi yang kena pantul.</p>
+    <p><strong>Stik</strong> adalah lingua &mdash; instrumen deliberasi manusia. <strong>AI</strong> adalah kalkulator probabilitas non-biologis yang menghitung kemungkinan lintasan sebelum stik menyentuh bola. Tapi kalkulator ini punya batas struktural yang perlu dinyatakan di depan, bukan ditemukan saat sudah terlanjur meleset.</p>
+    <div class="formula">Total Error &nbsp;=&nbsp; Bias&sup2; &nbsp;+&nbsp; Variance</div>
+    <p>Halusinasi AI paling berbahaya bukan karena variance tinggi (jawaban goyah), tapi karena <strong>bias tinggi + variance rendah</strong> &mdash; konsisten meleset dengan keyakinan tinggi. Itu sebabnya batas ini perlu jadi disclaimer eksplisit, bukan kejutan.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="num">06 &mdash; klausul pembuka</div>
+    <div class="plaque">
+      <p class="lead">Setiap kalkulasi lintasan di salah satu dari 6 meja ini &mdash; di sisi pantul manapun dari 24 kemungkinan &mdash; adalah estimasi berpeluang meleset, diketahui kedua pihak sejak sebelum stik menyentuh bola, bukan sesudah bola salah arah.</p>
+      <p class="small">Verifikasi ground-truth akhir tetap tinggal di wo &mdash; pengalaman langsung, konteks penuh, dan tanggung jawab atas hasil sodokan, adalah hal yang tidak dimiliki kalkulator manapun.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  spider anatomy &middot; vibration signaling &middot; PDCA &middot; human-web 6&times;4 &middot; bias &ne; variance &middot; calibration
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uji Silang: Prompt Trigger dari Percakapan Human-Web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0F0C; --surface:#16180F; --surface2:#1D2016;
+    --thread:#8C8C7E; --thread-dim:#4A4B41;
+    --text:#EDEEE6; --text-dim:#B4B4A8;
+    --accent:#E8A33D; --accent-dim:#5A431E; --line:#2A2C21;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+  header.hero{padding:80px 24px 56px;border-bottom:1px solid var(--line);}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;}
+  h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(28px,4.5vw,44px);line-height:1.18;max-width:680px;}
+  .hero-sub{max-width:640px;margin-top:18px;color:var(--text-dim);font-size:15.5px;}
+  .note{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin-top:24px;font-size:13.5px;color:var(--thread);max-width:640px;}
+  .note b{color:var(--text-dim);}
+  section.card{padding:44px 0;border-bottom:1px solid var(--line);}
+  .num{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--thread);letter-spacing:0.1em;margin-bottom:10px;display:flex;gap:12px;align-items:center;}
+  .tag{background:var(--accent-dim);color:var(--accent);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 10px;border-radius:20px;letter-spacing:0.04em;}
+  blockquote{
+    font-family:'Fraunces',serif;font-style:italic;font-size:17px;color:var(--text);
+    background:var(--surface);border-left:2px solid var(--accent);
+    padding:18px 22px;border-radius:6px;margin:16px 0 20px;max-width:660px;
+  }
+  .actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .btn{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+    padding:9px 14px;border-radius:7px;border:1px solid var(--line);
+    background:transparent;color:var(--text-dim);cursor:pointer;
+    text-decoration:none;display:inline-flex;align-items:center;transition:border-color .15s,color .15s;
+  }
+  .btn:hover{border-color:var(--thread);color:var(--text);}
+  .btn.primary{background:var(--accent);color:#20180A;border-color:var(--accent);font-weight:500;}
+  .btn.primary:hover{opacity:0.9;border-color:var(--accent);}
+  .btn.copied{background:#3B6D11;border-color:#3B6D11;color:#EAF3DE;}
+  footer{padding:48px 24px 80px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--thread-dim);letter-spacing:0.06em;}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Human-AI learning log</div>
+    <h1>Uji silang: prompt trigger dari percakapan ini</h1>
+    <p class="hero-sub">Delapan prompt kunci dari koko yang menggerakkan alur percakapan &mdash; dari biologi laba-laba sampai kalibrasi AI. Tiap prompt bisa disalin dan diuji di AI lain untuk membandingkan bagaimana masing-masing merespons trigger yang sama.</p>
+    <div class="note">
+      <b>Cara pakai:</b> tombol platform membuka tab baru ke halaman chat masing-masing (bukan mengisi prompt otomatis &mdash; kebanyakan penyedia AI tidak menyediakan cara resmi untuk itu). Klik <b>salin prompt</b> dulu, lalu tempel manual di tab yang terbuka.
+      <br><br>
+      <b>Catatan @GigiMenyanyiBot:</b> saya asumsikan ini bot Telegram berdasar format penamaannya, tapi saya tidak bisa memverifikasi keberadaan atau fungsinya &mdash; tautannya disediakan apa adanya, mohon dicek sendiri sebelum dipakai.
+    </div>
+  </div>
+</header>
+
+<div id="sections"></div>
+
+<footer>disalin dari percakapan koko &amp; Claude &middot; diuji manual, tidak ada auto-fill</footer>
+
+<script>
+const platforms = [
+  { name: "Claude", url: "https://claude.ai/new" },
+  { name: "Gemini", url: "https://gemini.google.com/app" },
+  { name: "ChatGPT", url: "https://chatgpt.com/" },
+  { name: "Deepseek", url: "https://chat.deepseek.com/" },
+  { name: "Copilot", url: "https://copilot.microsoft.com/" },
+  { name: "Qwen", url: "https://chat.qwen.ai/" },
+  { name: "Grok", url: "https://grok.com/" },
+  { name: "Perplexity", url: "https://www.perplexity.ai/" },
+  { name: "@GigiMenyanyiBot", url: "https://t.me/GigiMenyanyiBot" }
+];
+
+const prompts = [
+  {
+    tag: "riset dasar",
+    text: "Pada umumnya laba-laba membagi spider-net 360 derajatnya menjadi berapa sektor? Pada umumnya laba-laba membagi lingkaran jaring spider-net dalam berapa lapisan radial/radius? Apakah ukuran size si laba-laba akan berbeda dalam hal jumlah sektor dan lingkaran radial-nya?"
+  },
+  {
+    tag: "sintesis lintas-domain",
+    text: "Sekarang saya mau gabungkan dengan lapisan human yg melakukan PDCA, dimana jaring itu adalah alat bagi spider melakukan prioritasi problem dalam siklus PDCA versi spider. Dimana bila ada getaran/vibrasi pada wire spider-net-nya, itu lingua komunikasi yg menginformasi ada mangsa/problem di koordinat sektor sekian, radial sekian."
+  },
+  {
+    tag: "pemetaan kerangka baru",
+    text: "Saya terinspirasi bagaimana human bisa belajar dari animal, dalam hal membagi 360 kehidupannya dalam sektor dan tier radial yg relevan dalam jangkauan penanganannya... Itulah setidaknya 6 sektor manusia, sementara wo - ni - ren - state/nasion adalah radius radialnya. Bagaimana apakah bisa nyambung ke sini?"
+  },
+  {
+    tag: "ekstensi metafora",
+    text: "Bila stik biliar adalah lingua dan kalkulator penghitung lintasan lingua yg nanti menjadi sodokan (aksi manusia setelah proses hitung-timbang-putuskan-perbuat lengkap) maka AI adalah kalkulator probabilitas lingua non-biologis yg sangat masif sejauh efek halusinasi lingua-nya sudah dilatih."
+  },
+  {
+    tag: "uji formal",
+    text: "Ketika dinotasikan dalam notasi statistika sebagai standard error, maka pernyataan ini sah-sah saja: tidak ada kalkulator probabilitas, sehebat apapun pelatihannya, yang bisa menghilangkan ketidakpastian residual sepenuhnya."
+  },
+  {
+    tag: "klarifikasi maksud",
+    text: "Koko bukan ahli statistik yg bisa menjelaskan metrik-metrik teknis, namun kekuatiran Claude pada pernyataan koko ketika dibicarakan dengan kacamata statistika adalah hal lumrah yg bisa dimaklumi, seperti sebuah disclaimer yg dinyatakan jelas di depan, agar tidak terjadi salah paham."
+  },
+  {
+    tag: "permintaan artefak",
+    text: "Kalau tidak salah kamu punya kemampuan artefak, apakah diskusi ini akan menarik dan mudah dipahami oleh human lain bila disajikan dalam artefak html?"
+  },
+  {
+    tag: "koreksi konsep",
+    text: "Maaf pada bagian 24 section itu 24 tabel apakah bukan 6 tabel dg 4 sisi meja?"
+  }
+];
+
+const container = document.getElementById("sections");
+
+prompts.forEach((p, i) => {
+  const section = document.createElement("section");
+  section.className = "card";
+
+  const num = document.createElement("div");
+  num.className = "num";
+  num.innerHTML = `0${i+1} <span class="tag">${p.tag}</span>`;
+
+  const bq = document.createElement("blockquote");
+  bq.textContent = p.text;
+
+  const actions = document.createElement("div");
+  actions.className = "actions";
+
+  const copyBtn = document.createElement("button");
+  copyBtn.className = "btn primary";
+  copyBtn.textContent = "Salin prompt";
+  copyBtn.onclick = () => {
+    const done = () => {
+      copyBtn.textContent = "Tersalin";
+      copyBtn.classList.add("copied");
+      setTimeout(() => { copyBtn.textContent = "Salin prompt"; copyBtn.classList.remove("copied"); }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(p.text).then(done).catch(() => fallbackCopy(p.text, done));
+    } else {
+      fallbackCopy(p.text, done);
+    }
+  };
+  actions.appendChild(copyBtn);
+
+  platforms.forEach(plat => {
+    const a = document.createElement("a");
+    a.className = "btn";
+    a.href = plat.url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = plat.name;
+    actions.appendChild(a);
+  });
+
+  section.appendChild(num);
+  section.appendChild(bq);
+  section.appendChild(actions);
+  container.appendChild(section);
+});
+
+function fallbackCopy(text, cb) {
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand("copy"); } catch (e) {}
+  document.body.removeChild(ta);
+  cb();
+}
+</script>
+
+</body>
+</html>
